@@ -1,0 +1,15 @@
+.Contact-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.Title {
+  color: #636363;
+  font-weight: 300;
+}
+
+.Subtitle {
+  font-size: 12px;
+  font-weight: 300;
+}

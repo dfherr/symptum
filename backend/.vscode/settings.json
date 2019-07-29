@@ -1,0 +1,9 @@
+{
+    "eslint.autoFixOnSave": true,
+    "javascript.format.insertSpaceAfterFunctionKeywordForAnonymousFunctions": false,
+    "editor.detectIndentation": false,
+    "editor.formatOnPaste": true,
+    "editor.formatOnType": true,
+    "editor.formatOnSave": true,
+    "editor.tabSize": 4,
+}

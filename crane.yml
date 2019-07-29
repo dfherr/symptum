@@ -1,0 +1,89 @@
+prefix: "symptum-"
+services:
+  frontend:
+    image: "dfherr/symptum-frontend:latest"
+    networks: ["frontend-net"]
+    #detatch: true
+    interactive: true
+    tty: true
+    publish: ["3000:3000"]
+    volume: ["frontend:/usr/src/app"]
+  nginx:
+    image: "nginx:1.17.2-alpine"
+    networks:  ["backend-net", "frontend-net"]
+    requires:
+      - "backend"
+      - "frontend"
+      - "pgadmin"
+    interactive: true
+    tty: true
+    volume: 
+      - "nginx/development.conf:/etc/nginx/conf.d/default.conf"
+    publish: ["80:80"]
+  backend:
+    image: "dfherr/symptum-backend:latest"
+    requires:
+      - "postgres"
+    networks: ["backend-net"]
+    #detach: true
+    interactive: true
+    tty: true
+    publish: ["8080:8080"]
+    volume: ["backend:/usr/src/app"]
+  postgres:
+    image: "postgres:10.8-alpine"
+    networks: ["backend-net"]
+    env:
+      - "POSTGRES_USER=postgres"
+      - "POSTGRES_PASSWORD=foobar"
+      - "PGDATA=/var/lib/postgresql/data/pgdata"
+      - "POSTGRES_DB=symptum"
+    volume: ["persistence/data:/var/lib/postgresql/data"]
+    run:
+      #detach: true
+    exec:
+      tty: true
+      interactive: true
+    publish: ["5432:5432"]
+  production-frontend:
+    image: "dfherr/symptum-frontend:latest"
+    networks: ["frontend-net"]
+    detatch: true
+    interactive: true
+    tty: true
+    build:
+      build-args: 
+        - "NODE_ENV=production"
+    cmd: "serve -s build"
+  production-backend:
+    image: "dfherr/symptum-backend:latest"
+    requires:
+      - "postgres"
+    networks: ["backend-net"]
+    detach: true
+    interactive: true
+    tty: true
+  production-nginx:
+    image: "nginx:1.17.2-alpine"
+    networks:  ["frontend-net", "backend-net"]
+    requires:
+      - "production-backend"
+      - "production-frontend"
+      - "pgadmin"
+    detach: true
+    volume: 
+      - "nginx/production.conf:/etc/nginx/conf.d/default.conf"
+      - "/etc/ssl/cert.pem:/etc/ssl/cert.pem"
+      - "/etc/ssl/privkey.pem:/etc/ssl/privkey.pem"
+    publish: ["80:80", "443:443"]
+  pgadmin:
+    image: "dpage/pgadmin4"
+    networks:  ["backend-net"]
+    detach: true
+    env:
+      - "PGADMIN_DEFAULT_EMAIL=foomail"
+      - "PGADMIN_DEFAULT_PASSWORD=foobar"
+    volume: ["persistence/pgadmin:/var/lib/pgadmin"]
+networks:
+  backend-net:
+  frontend-net:

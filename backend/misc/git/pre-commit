@@ -1,0 +1,9 @@
+#!/bin/bash
+
+exec < /dev/tty
+
+staged_files=$(git diff --cached --name-only --diff-filter=ACM  | grep .js$)
+if [[ ! -z "$staged_files" ]]
+then
+  crane run backend ./node_modules/.bin/eslint --fix $staged_files
+fi

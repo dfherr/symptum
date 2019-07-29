@@ -1,0 +1,16 @@
+.LoginPage-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.Title {
+  color: #636363;
+  font-weight: 300;
+}
+
+.Subtitle {
+  font-size: 12px;
+  font-weight: 300;
+}

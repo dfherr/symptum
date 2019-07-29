@@ -1,0 +1,11 @@
+# blacklist every subdir
+/*
+# now whitelist
+!.gitignore
+!.gitmodules
+!frontend
+!backend
+!nginx
+!crane.yml
+!README.md
+!LICENSE
